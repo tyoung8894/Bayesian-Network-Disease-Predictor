@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/netica/NeticaJ.jar"/>
+	<classpathentry kind="lib" path="lib/javabayes/javabayes-0.346.jar" sourcepath="/JavaBayes/src"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jre1.8.0_151/lib/ext/mysql-connector-java-5.1.45-bin.jar"/>
+	<classpathentry kind="lib" path="jgoodies-common-1.8.0.jar" sourcepath="jgoodies-common-1.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

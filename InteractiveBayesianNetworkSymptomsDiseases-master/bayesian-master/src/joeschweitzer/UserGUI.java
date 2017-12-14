@@ -47,6 +47,7 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Vector;
 import java.awt.Dimension;
 import javax.swing.JMenuItem;
@@ -71,10 +72,6 @@ public class UserGUI extends JPanel{
 	private JavaBayes bayesNet;
 	private JFrame symptomFrame;
 	private JFrame frame;
-	public JPanel cards;
-	final static String TITLEPANEL = "Title card";
-	final static String SYMPTOMPANEL = "Card with Symptoms";
-	final static String DISEASEPANEL = "Card with Diseases";
 	private JTextField textField;
 	private JLabel label;
 	public JLabel diseaseOutcome;
@@ -92,15 +89,17 @@ public class UserGUI extends JPanel{
 	 */
 	public UserGUI() throws IOException, IFException{
 		//Create the list of symptoms and put it in a scroll pane.
-		InferenceGraph graph = new InferenceGraph("C:\\Users\\Tyler Young\\Desktop\\formatted.xml");
+		
+		InferenceGraph graph = new InferenceGraph("networkBIF.xml");
 		guiGraph = graph;
 		Vector<InferenceGraphNode> guiNodes = guiGraph.get_nodes();
 		theNodes = guiNodes;
 		
+		//creates a JavaBayes object, representing the bayesian network of the .xml file that is in BIF xml format
 		JavaBayes network = new JavaBayes(guiGraph, theNodes);
 		bayesNet = network;
 		bayesNet.initialize();
-		
+	
 		//symptom names
 		symptomNames = bayesNet.getSymptomList();
 		//list of diseaseNames
@@ -109,7 +108,8 @@ public class UserGUI extends JPanel{
 		list.setSelectedIndex(0);
 		
 		JScrollPane listScrollPane = new JScrollPane(list);
-		//right side, disease results
+		
+		//right side of GUI, shows top diseases based on entered symptoms from the list
 		diseaseOutcome = new JLabel();
 		diseaseOutcome.setFont(diseaseOutcome.getFont().deriveFont(Font.ITALIC));
 		diseaseOutcome.setHorizontalAlignment(JLabel.CENTER);
@@ -140,6 +140,12 @@ public class UserGUI extends JPanel{
     }
 
    
+    /**
+     * @param name  
+     * sets the text on right side of the GUI to the input name string
+     * @throws IOException
+     * @throws IFException
+     */
     protected void updateLabel (String name) throws IOException, IFException {
     	diseaseOutcome.setText(name);
     }
@@ -170,20 +176,6 @@ public class UserGUI extends JPanel{
 	}
 
 
-	//	
-	//	 public void valueChanged(ListSelectionEvent e) {
-	//	        if (e.getValueIsAdjusting())
-	//	            return;
-	//	 
-	//	        JList theList = (JList)e.getSource();
-	//	        if (theList.isSelectionEmpty()) {
-	//	            label.setText("Nothing selected.");
-	//	        } else {
-	//	            int index = theList.getSelectedIndex();
-	//	            label.setText("Selected image number " + index);
-	//	        }
-	//	    }
-
 	/**
 	 * Create the GUI and show it.  For thread safety,
 	 * this method should be invoked from the
@@ -197,8 +189,6 @@ public class UserGUI extends JPanel{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		UserGUI tylerGUI = new UserGUI();
         frame.getContentPane().add(tylerGUI.getSplitPane(), BorderLayout.NORTH);
-		//Display the window.
-		//frame.pack();
 		frame.setVisible(true);
 	}
 }

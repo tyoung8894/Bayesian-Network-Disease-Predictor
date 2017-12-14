@@ -27,7 +27,7 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 	public ArrayList<String> observationSymptoms;
 
 	public UserGUI2() throws IOException, IFException {
-		super("UserGUI2");
+		super("Symptom Checker- Identify possible diseases for your symptoms");
 		observationSymptoms = new ArrayList<String>();
 
 		//Create an instance of the GUI
@@ -116,11 +116,11 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 				network.setGraph(graph);
 				ArrayList<String> likelyDiseases = network.getBelief(observationSymptoms);
 				try {
-					String diseaseOutcomeText = "Top Diseases: ";
+					String diseaseOutcomeText = "<html><p>Top Diseases:</p> ";
+					int count=0;
 					for(String disease: likelyDiseases){
-						
-						diseaseOutcomeText = diseaseOutcomeText + "," + disease;
-						
+						count++;
+						diseaseOutcomeText = diseaseOutcomeText + "<p>" + count + "." + disease + "</p>";
 					}
 					diseaseSymptomGUI.updateLabel(diseaseOutcomeText);
 					//diseaseSymptomGUI.updateLabel("Top diseases: " + likelyDisease);

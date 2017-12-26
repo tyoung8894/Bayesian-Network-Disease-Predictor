@@ -27,26 +27,27 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
 	private JPanel panel;
-	private JSplitPane splitPane_1;
-	private JButton btnNewButton;
+	private JSplitPane buttonPane;
+	private JButton addSymptomButton;
 	private JButton generateButton;
 	private JButton clearButton;
-	public UserGUI diseaseSymptomGUI;
-	public String symptomToBeAdded;
-	public ArrayList<String> observationSymptoms;
+	private UserGUI diseaseSymptomGUI;
+	private String symptomToBeAdded;
+	private ArrayList<String> observationSymptoms;
 
 	public UserGUI2() throws IOException, IFException {
+		//set JFrame title 
 		super("Symptom Checker- Identify possible diseases for your symptoms");
-		//create a list that will hold the user's inputted symptoms
+		//create a list that will hold the user's input symptoms
 		observationSymptoms = new ArrayList<String>();
 
 		//Create an instance of the GUI
-		UserGUI newGui = new UserGUI();
-		diseaseSymptomGUI = newGui;
+		diseaseSymptomGUI = new UserGUI();
+
 		JSplitPane top = diseaseSymptomGUI.getSplitPane();
 
 		//add selection listener to the list in gui
-		diseaseSymptomGUI.getImageList().addListSelectionListener(this);
+		diseaseSymptomGUI.getSymptomList().addListSelectionListener(this);
 		top.setBorder(null);
 
 		//Provide minimum sizes for the two components in the split pane
@@ -77,18 +78,19 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 				top, label);
+
 		panel.add(splitPane, BorderLayout.NORTH);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(180);
 
-		splitPane_1 = new JSplitPane();
-		panel.add(splitPane_1, BorderLayout.SOUTH);
+		buttonPane = new JSplitPane();
+		panel.add(buttonPane, BorderLayout.SOUTH);
 
 		//adds a button for selecting a symptom, if a symptom in the scroll list is 
 		//selected and the user clicks the button, the symptom will be added to the 
 		//list of symptoms to be set as observed
-		btnNewButton = new JButton("Add The Selected Symptom ");
-		btnNewButton.addMouseListener(new MouseAdapter(){
+		addSymptomButton = new JButton("Add The Selected Symptom ");
+		addSymptomButton.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
 				label.setText(symptomToBeAdded + " added to symptoms");
 				observationSymptoms.add(symptomToBeAdded);
@@ -96,9 +98,9 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 				int count = 0;
 				for(String userEnteredSymptom: observationSymptoms){
 					count++;
-					textToDisplay = textToDisplay+ "<p>" + count + ". " + userEnteredSymptom + "</p>";
+					textToDisplay += "<p>" + count + ". " + userEnteredSymptom + "</p>";
 				}
-				textToDisplay = textToDisplay + "</html>";
+				textToDisplay += "</html>";
 				try {
 					diseaseSymptomGUI.updateLabel(textToDisplay);
 				} catch (IOException e1) {
@@ -110,21 +112,18 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 			}
 		});
 
-
-
-		splitPane_1.setLeftComponent(btnNewButton);
+		buttonPane.setLeftComponent(addSymptomButton);
 		generateButton = new JButton("Generate Likely Diseases");
 
 		//if "generate likely diseases" button is clicked in gui, all of the symptoms the user
 		//has added will be set as observed variables in the graph, and the top diseases will output on the right label of the GUI
 		generateButton.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				UserGUI gui;
 				try {
-					gui = new UserGUI();
-					InferenceGraph graph = gui.generateGraph();
+					InferenceGraph graph = diseaseSymptomGUI.generateGraph();
 					Vector<InferenceGraphNode> guiNodes = graph.get_nodes();
 					JavaBayes newBayes = new JavaBayes(graph, guiNodes);
+
 					//finds the top diseases and updates the label with the text of the disease names
 					//formats the label with html
 					ArrayList<String> likelyDiseases = newBayes.getBelief(observationSymptoms, guiNodes, graph);
@@ -133,7 +132,7 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 						int count=0;
 						for(String disease: likelyDiseases){
 							count++;
-							diseaseOutcomeText = diseaseOutcomeText + "<p>" + count + "." + disease + "</p>";
+							diseaseOutcomeText += "<p>" + count + "." + disease + "</p>";
 						}
 						diseaseSymptomGUI.updateLabel(diseaseOutcomeText);
 					} catch (IOException e2) {
@@ -147,19 +146,12 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 				} catch (IFException e1) {
 					e1.printStackTrace();
 				}
-				//System.out.println("DISEASE OUTCOME: " + likelyDisease);
+
 			}
 		});
-		splitPane_1.setRightComponent(generateButton);
+		buttonPane.setRightComponent(generateButton);
 		label.setMinimumSize(new Dimension(30, 30));
 	}
-
-
-
-	public JLabel getLabel(){
-		return label;
-	}
-
 
 
 	/* 
@@ -174,7 +166,6 @@ public class UserGUI2 extends JFrame implements ListSelectionListener {
 			label.setText("Nothing selected.");
 		} else {
 			String symptomSelected = theList.getSelectedValue().toString();
-			int index = theList.getSelectedIndex();
 			symptomToBeAdded = symptomSelected;
 			label.setText("Selected Symptom:  " + symptomSelected);
 		}

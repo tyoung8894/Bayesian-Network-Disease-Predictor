@@ -2,6 +2,9 @@ Author: Tyler Young
 
 **Bayesian network for symptoms and diseases**
 
+
+github link: https://github.com/tyoung8894/BayesianNetwork/tree/master/InteractiveBayesianNetworkSymptomsDiseases-master/bayesian-master
+
 This program takes data from a PubMed database dataset of symptoms and diseases
 from https://www.nature.com/articles/ncomms5212
 
